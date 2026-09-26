@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,25 +27,20 @@ public class RestaurantController {
     private AdminAuthorizationService adminAuthorizationService;
 
     @PostMapping("/owner/restaurant")
-    public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestBody RestaurantRequest request,
+    public ResponseEntity<RestaurantResponse> createRestaurant(@Valid @RequestPart("restaurant") RestaurantRequest request,
+                                                               @RequestPart(value = "image", required = false) MultipartFile image,
                                                                Authentication authentication) {
 //        checkAdmin(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        RestaurantResponse response = restaurantService.createRestaurant(request, userDetails.getId());
+        RestaurantResponse response = restaurantService.createRestaurant(request, image, userDetails.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @GetMapping("/owner/restaurant")
-    public ResponseEntity<List<RestaurantResponse>> getOwnerRestaurants(
-            Authentication authentication) {
+    public ResponseEntity<List<RestaurantResponse>> getOwnerRestaurants(Authentication authentication) {
 
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return ResponseEntity.ok(
-                restaurantService.getOwnerRestaurants(
-                        userDetails.getId()
-                )
-        );
+        return ResponseEntity.ok(restaurantService.getOwnerRestaurants(userDetails.getId()));
     }
 
 //    @GetMapping("/owner/restaurant")

@@ -49,6 +49,7 @@ public class SecurityConfig {
                                 "/rms/owner/verify-email",
                                 "/rms/owner/resend-verification"
                                 ).permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/rms/admin/**").authenticated()
                         .anyRequest().authenticated());
 

@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,13 +37,13 @@ public class RestaurantServiceImpl implements RestaurantService{
     private OwnerSubscriptionRepository ownerSubscriptionRepository;
 
     @Autowired
+    private ImageStorageService imageStorageService;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Override
-    public RestaurantResponse createRestaurant(RestaurantRequest request, Long ownerId) {
-//        if (restaurantRepository.existsByEmail(request.getEmail())) {
-//            throw new APIException("Restaurant already exists with email: " + request.getEmail());
-//        }
+    public RestaurantResponse createRestaurant(RestaurantRequest request, MultipartFile image, Long ownerId) {
 
         if (restaurantRepository.existsByRestaurantName(request.getRestaurantName())) {
             throw new APIException("Restaurant already exists: " + request.getRestaurantName());
@@ -67,7 +68,6 @@ public class RestaurantServiceImpl implements RestaurantService{
 
         Integer restaurantLimit = plan.getRestaurantLimit();
 
-// -1 means unlimited
         if (restaurantLimit != -1 &&
                 restaurantCount >= restaurantLimit) {
 
@@ -82,8 +82,17 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurant.setState(request.getState());
         restaurant.setCity(request.getCity());
         restaurant.setPincode(request.getPincode());
+        restaurant.setOpeningTime(request.getOpeningTime());
+        restaurant.setClosingTime(request.getClosingTime());
+        restaurant.setOpenDays(request.getOpenDays());
 
         restaurant.setApproved(false);
+
+        if (image != null && !image.isEmpty()) {
+            String imagePath = imageStorageService.saveImage(image);
+            restaurant.setImage(imagePath);
+        }
+
 
 //        restaurant.setRating(BigDecimal.ZERO);
 
@@ -102,9 +111,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
-    public List<RestaurantResponse> getOwnerRestaurants(
-            Long ownerId
-    ) {
+    public List<RestaurantResponse> getOwnerRestaurants(Long ownerId) {
 
         return restaurantRepository
                 .findByStaff_User_Id(ownerId)
@@ -201,6 +208,9 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurant.setState(request.getState());
         restaurant.setCity(request.getCity());
         restaurant.setPincode(request.getPincode());
+        restaurant.setOpeningTime(request.getOpeningTime());
+        restaurant.setClosingTime(request.getClosingTime());
+        restaurant.setOpenDays(request.getOpenDays());
 
         restaurant.setApproved(false);
 

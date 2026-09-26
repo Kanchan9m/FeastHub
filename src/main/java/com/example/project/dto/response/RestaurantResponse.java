@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,4 +31,10 @@ public class RestaurantResponse {
     private String pincode;
 
     private Boolean approved;
+
+    private LocalTime openingTime;
+    private LocalTime closingTime;
+    private Set<DayOfWeek> openDays;
+
+    private String image;
 }

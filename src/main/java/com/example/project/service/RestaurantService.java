@@ -4,12 +4,13 @@ import com.example.project.dto.request.RestaurantRequest;
 import com.example.project.dto.response.RestaurantResponse;
 import com.example.project.dto.response.SubscriptionResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Service
 public interface RestaurantService {
-    RestaurantResponse createRestaurant(RestaurantRequest request, Long ownerId);
+    RestaurantResponse createRestaurant(RestaurantRequest request, MultipartFile image, Long ownerId);
 
     RestaurantResponse updateRestaurant(Long restaurantId, RestaurantRequest request);
 
