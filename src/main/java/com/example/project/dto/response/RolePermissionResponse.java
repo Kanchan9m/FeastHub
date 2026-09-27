@@ -14,9 +14,7 @@ public class RolePermissionResponse {
     private Long id;
 
     private Long roleId;
-
     private RoleType roleName;
-
     private Long permissionId;
 
     private String permissionName;
