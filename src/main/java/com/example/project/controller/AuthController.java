@@ -119,8 +119,7 @@ public class AuthController {
         user.setPhone(registerRequest.getPhone());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        Role role = roleRepository
-                .findByRoleName(registerRequest.getRole())
+        Role role = roleRepository.findByRoleName(registerRequest.getRole())
                 .orElseThrow(() -> new RuntimeException("Role Not Found"));
 
         System.out.println("Role ID = " + role.getId());
@@ -137,9 +136,7 @@ public class AuthController {
 
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
-        return ResponseEntity.ok(
-                new MessageResponse("Logged out successfully.")
-        );
+        return ResponseEntity.ok(new MessageResponse("Logged out successfully."));
     }
 
     @PostMapping("/refresh")

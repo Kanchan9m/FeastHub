@@ -40,8 +40,7 @@ public class RazorpaySubscriptionController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        razorpaySubscriptionService.verifyPayment(
-                userDetails.getId(),
+        razorpaySubscriptionService.verifyPayment(userDetails.getId(),
                 request.getRazorpayPaymentId(),
                 request.getRazorpaySubscriptionId(),
                 request.getRazorpaySignature()
