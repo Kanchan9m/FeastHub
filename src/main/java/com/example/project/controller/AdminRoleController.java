@@ -39,8 +39,6 @@ public class AdminRoleController {
     private void checkAdmin(Authentication authentication) {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        adminAuthorizationService.checkAdmin(userDetails.getId()
-        );
+        adminAuthorizationService.checkAdmin(userDetails.getId());
     }
 }
