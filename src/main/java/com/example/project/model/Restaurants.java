@@ -59,5 +59,8 @@ public class Restaurants {
     @OneToMany(mappedBy = "restaurant")
     private List<UserRestaurant> staff = new ArrayList<>();
 
+    private Long Latitude;
+
+    private Long Longitude;
 
 }
