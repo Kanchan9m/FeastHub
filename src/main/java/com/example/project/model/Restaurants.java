@@ -63,4 +63,6 @@ public class Restaurants {
 
     private Long Longitude;
 
+
+
 }
