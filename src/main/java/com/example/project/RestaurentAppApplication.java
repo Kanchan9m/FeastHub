@@ -9,6 +9,7 @@ public class RestaurentAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestaurentAppApplication.class, args);
 
+
 	}
 
 }
