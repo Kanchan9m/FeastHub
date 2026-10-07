@@ -19,6 +19,9 @@ public class MenuItem {
     private String menuName;
 
     private String description;
-    
+
+    private String category;
+
+    private Long price;
 
 }
