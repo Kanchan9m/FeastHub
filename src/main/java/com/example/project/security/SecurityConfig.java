@@ -41,10 +41,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                HttpMethod.OPTIONS,
-                                "/**"
-                        ).permitAll().requestMatchers("/rms/register", "/rms/signin", "/rms/refresh",
+                        .requestMatchers(HttpMethod.OPTIONS,"/**")
+                        .permitAll().requestMatchers("/rms/register",
+                                "/rms/signin", "/rms/refresh",
                                 "/rms/owner/register",
                                 "/rms/owner/verify-email",
                                 "/rms/owner/resend-verification"
@@ -70,8 +69,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+            throws Exception {
 
         return configuration.getAuthenticationManager();
     }

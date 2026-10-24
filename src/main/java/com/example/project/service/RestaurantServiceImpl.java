@@ -10,7 +10,7 @@ import com.example.project.repositories.*;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -81,6 +81,9 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurant.setPhone(request.getPhone());
         restaurant.setState(request.getState());
         restaurant.setCity(request.getCity());
+        restaurant.setCountry(request.getCountry());
+        restaurant.setLatitude(request.getLatitude());
+        restaurant.setLongitude(request.getLongitude());
         restaurant.setPincode(request.getPincode());
         restaurant.setOpeningTime(request.getOpeningTime());
         restaurant.setClosingTime(request.getClosingTime());
@@ -89,7 +92,7 @@ public class RestaurantServiceImpl implements RestaurantService{
         restaurant.setApproved(false);
 
         if (image != null && !image.isEmpty()) {
-            String imagePath = imageStorageService.saveImage(image);
+            String imagePath = imageStorageService.saveRestaurantImage(image);
             restaurant.setImage(imagePath);
         }
 
@@ -191,37 +194,89 @@ public class RestaurantServiceImpl implements RestaurantService{
 //    }
 
     @Override
-    public RestaurantResponse updateRestaurant(Long restaurantId, RestaurantRequest request) {
-        Restaurants restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+    public RestaurantResponse updateRestaurant(
+            Long restaurantId,
+            RestaurantRequest request,
+            MultipartFile image,
+            Long ownerId) {
 
-//        restaurantRepository.findByEmail(request.getEmail())
-//                .ifPresent(existingRestaurant -> {
-//                    if (!existingRestaurant.getId().equals(restaurantId)) {
-//                        throw new APIException("Restaurant email already exists");
-//                    }
-//                });
+        Restaurants restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Restaurant not found"));
+
+        // Verify ownership before updating.
+//        if (!restaurant.getOwner().getId().equals(ownerId)) {
+//            throw new AccessDeniedException(
+//                    "You are not authorized to update this restaurant");
+//        }
+
+
+        // Update fields using your existing RestaurantRequest getters.
         restaurant.setRestaurantName(request.getRestaurantName());
         restaurant.setAddress(request.getAddress());
         restaurant.setPhone(request.getPhone());
-//        restaurant.setEmail(request.getEmail());
         restaurant.setState(request.getState());
         restaurant.setCity(request.getCity());
+        restaurant.setCountry(request.getCountry());
+        restaurant.setLatitude(request.getLatitude());
+        restaurant.setLongitude(request.getLongitude());
         restaurant.setPincode(request.getPincode());
         restaurant.setOpeningTime(request.getOpeningTime());
         restaurant.setClosingTime(request.getClosingTime());
         restaurant.setOpenDays(request.getOpenDays());
+//        restaurant.setStreet(request.getStreet());
+//        restaurant.setCity(request.getCity());
+//        restaurant.setState(request.getState());
+//        restaurant.setPincode(request.getPincode());
+//        restaurant.setCountry(request.getCountry());
 
-        restaurant.setApproved(false);
+        // Preserve the existing image unless a replacement is uploaded.
+        if (image != null && !image.isEmpty()) {
+            String imagePath = imageStorageService.saveRestaurantImage(image);
+            restaurant.setImage(imagePath);
+        }
 
-//        restaurant.setRating(BigDecimal.ZERO);
+        Restaurants updated = restaurantRepository.save(restaurant);
 
-        Restaurants updatedRestaurant = restaurantRepository.save(restaurant);
-
-        return modelMapper.map(updatedRestaurant, RestaurantResponse.class);
-
-
+        return modelMapper.map(updated, RestaurantResponse.class);
     }
+
+//    @Override
+//    public RestaurantResponse updateRestaurant(Long restaurantId, RestaurantRequest request, MultipartFile image,
+//                                               Long ownerId) {
+//        Restaurants restaurant = restaurantRepository.findById(restaurantId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found"));
+//
+////        restaurantRepository.findByEmail(request.getEmail())
+////                .ifPresent(existingRestaurant -> {
+////                    if (!existingRestaurant.getId().equals(restaurantId)) {
+////                        throw new APIException("Restaurant email already exists");
+////                    }
+////                });
+//        restaurant.setRestaurantName(request.getRestaurantName());
+//        restaurant.setAddress(request.getAddress());
+//        restaurant.setPhone(request.getPhone());
+////        restaurant.setEmail(request.getEmail());
+//        restaurant.setState(request.getState());
+//        restaurant.setCity(request.getCity());
+//        restaurant.setCountry(request.getCountry());
+//        restaurant.setLatitude(request.getLatitude());
+//        restaurant.setLongitude(request.getLongitude());
+//        restaurant.setPincode(request.getPincode());
+//        restaurant.setOpeningTime(request.getOpeningTime());
+//        restaurant.setClosingTime(request.getClosingTime());
+//        restaurant.setOpenDays(request.getOpenDays());
+//
+//        restaurant.setApproved(false);
+//
+////        restaurant.setRating(BigDecimal.ZERO);
+//
+//        Restaurants updatedRestaurant = restaurantRepository.save(restaurant);
+//
+//        return modelMapper.map(updatedRestaurant, RestaurantResponse.class);
+//
+//
+//    }
 
     @Override
     public RestaurantResponse getRestaurantById(Long restaurantId) {

@@ -35,6 +35,11 @@ public class RestaurantRequest {
     @NotBlank
     private String city;
 
+    private String country;
+
+    private Double latitude;
+    private Double longitude;
+
     @NotBlank
     private String pincode;
 

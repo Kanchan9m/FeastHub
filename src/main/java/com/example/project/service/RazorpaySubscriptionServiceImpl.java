@@ -1,6 +1,7 @@
 package com.example.project.service;
 
 import com.example.project.dto.response.RazorpaySubscriptionResponse;
+import com.example.project.dto.response.SubscriptionResponse;
 import com.example.project.exception.APIException;
 import com.example.project.exception.ResourceNotFoundException;
 import com.example.project.model.OwnerSubscription;
@@ -8,6 +9,7 @@ import com.example.project.model.PlanType;
 import com.example.project.model.SubscriptionPlan;
 import com.example.project.model.User;
 import com.example.project.repositories.OwnerSubscriptionRepository;
+import com.example.project.repositories.RestaurantRepository;
 import com.example.project.repositories.SubscriptionPlanRepository;
 import com.example.project.repositories.UserRepository;
 import com.razorpay.RazorpayClient;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @Service
 public class RazorpaySubscriptionServiceImpl implements RazorpaySubscriptionService{
@@ -31,6 +34,9 @@ public class RazorpaySubscriptionServiceImpl implements RazorpaySubscriptionServ
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     @Autowired
     private SubscriptionPlanRepository subscriptionPlanRepository;

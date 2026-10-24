@@ -38,6 +38,15 @@ public class Restaurants {
     @Column(nullable = false)
     private String city;
 
+    @Column
+    private String country;
+
+    @Column
+    private Double Latitude;
+
+    @Column
+    private Double Longitude;
+
     @Column(nullable = false)
     private String pincode;
 
@@ -58,11 +67,6 @@ public class Restaurants {
 
     @OneToMany(mappedBy = "restaurant")
     private List<UserRestaurant> staff = new ArrayList<>();
-
-//    private Long Latitude;
-//
-//    private Long Longitude;
-
 
 
 }

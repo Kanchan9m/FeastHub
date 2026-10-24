@@ -28,34 +28,108 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
-        System.out.println("METHOD: " + request.getMethod());
-        try {
-            String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String email = jwtUtils.getUserNameFromJwtToken(jwt);
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+//            throws ServletException, IOException {
+//        logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
+//        System.out.println("METHOD: " + request.getMethod());
+//        try {
+//            String jwt = parseJwt(request);
+//
+//            if (jwt != null) {
+//                logger.info("Bearer token found for URI: {}", request.getRequestURI());
+//
+//                if (jwtUtils.validateJwtToken(jwt)) {
+//                    String email = jwtUtils.getUserNameFromJwtToken(jwt);
+//                    logger.info("JWT validated. Loading user from token subject.");
+//
+//                    UserDetails userDetails =
+//                            userDetailsService.loadUserByUsername(email);
+//
+//                    UsernamePasswordAuthenticationToken authentication =
+//                            new UsernamePasswordAuthenticationToken(
+//                                    userDetails,
+//                                    null,
+//                                    userDetails.getAuthorities()
+//                            );
+//
+//                    authentication.setDetails(
+//                            new WebAuthenticationDetailsSource()
+//                                    .buildDetails(request)
+//                    );
+//
+//                    SecurityContextHolder.getContext()
+//                            .setAuthentication(authentication);
+//
+//                    logger.info("Authentication set successfully.");
+//                } else {
+//                    logger.error("JWT validation returned false.");
+//                }
+//            }
+//        } catch (Exception e) {
+////            logger.error("Cannot set user authentication: {}", e);
+//            SecurityContextHolder.clearContext();
+//            logger.error(
+//                    "Authentication failed for URI: {}",
+//                    request.getRequestURI(),
+//                    e
+//            );
+//        }
+//
+//        filterChain.doFilter(request, response);
+//    }
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+@Override
+protected void doFilterInternal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain
+) throws ServletException, IOException {
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails,
-                                null,
-                                userDetails.getAuthorities());
-                logger.debug("Roles from JWT: {}", userDetails.getAuthorities());
+    logger.debug(
+            "JWT filter: method={}, URI={}",
+            request.getMethod(),
+            request.getRequestURI()
+    );
 
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    try {
+        String jwt = parseJwt(request);
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+        if (jwt == null) {
+            logger.debug("No Bearer token found.");
+        } else if (jwtUtils.validateJwtToken(jwt)) {
+            String email = jwtUtils.getUserNameFromJwtToken(jwt);
+
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(email);
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource()
+                            .buildDetails(request)
+            );
+
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
+
+            logger.debug("JWT authentication established.");
+        } else {
+            logger.warn("JWT validation failed.");
+            SecurityContextHolder.clearContext();
         }
-
-        filterChain.doFilter(request, response);
+    } catch (Exception e) {
+        SecurityContextHolder.clearContext();
+        logger.error("JWT authentication failed.", e);
     }
+
+    filterChain.doFilter(request, response);
+}
 
 
     private String parseJwt(HttpServletRequest request) {

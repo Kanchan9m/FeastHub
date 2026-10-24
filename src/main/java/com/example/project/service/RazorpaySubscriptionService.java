@@ -1,6 +1,7 @@
 package com.example.project.service;
 
 import com.example.project.dto.response.RazorpaySubscriptionResponse;
+import com.example.project.dto.response.SubscriptionResponse;
 
 public interface RazorpaySubscriptionService {
 

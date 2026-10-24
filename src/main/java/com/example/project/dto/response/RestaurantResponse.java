@@ -1,6 +1,5 @@
 package com.example.project.dto.response;
 
-import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +26,10 @@ public class RestaurantResponse {
     private String state;
 
     private String city;
+
+    private String country;
+    private Double latitude;
+    private Double longitude;
 
     private String pincode;
 

@@ -12,7 +12,8 @@ import java.util.List;
 public interface RestaurantService {
     RestaurantResponse createRestaurant(RestaurantRequest request, MultipartFile image, Long ownerId);
 
-    RestaurantResponse updateRestaurant(Long restaurantId, RestaurantRequest request);
+    RestaurantResponse updateRestaurant(Long restaurantId, RestaurantRequest request, MultipartFile image,
+                                        Long ownerId);
 
     RestaurantResponse getRestaurantById(Long restaurantId);
 
