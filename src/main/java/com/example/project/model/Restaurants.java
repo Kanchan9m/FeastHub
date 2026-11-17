@@ -61,6 +61,9 @@ public class Restaurants {
 
     private LocalTime closingTime;
 
+    @Column(name = "is_seeded")
+    private Boolean seeded = false;
+
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private Set<DayOfWeek> openDays = new HashSet<>();

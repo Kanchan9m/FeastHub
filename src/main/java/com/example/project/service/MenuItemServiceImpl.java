@@ -87,14 +87,10 @@ public class MenuItemServiceImpl implements MenuItemService{
     }
 
     @Override
-    public MenuItemResponse updateMenuItem(
-            Long menuItemId,
-            MenuItemRequest request,
-            MultipartFile image) {
+    public MenuItemResponse updateMenuItem(Long menuItemId, MenuItemRequest request, MultipartFile image) {
 
         MenuItem menuItem = menuItemRepository.findById(menuItemId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Menu item not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
 
         menuItem.setMenuName(request.getMenuName());
         menuItem.setDescription(request.getDescription());
@@ -111,7 +107,6 @@ public class MenuItemServiceImpl implements MenuItemService{
         }
 
         MenuItem updated = menuItemRepository.save(menuItem);
-
         return modelMapper.map(updated, MenuItemResponse.class);
     }
 
@@ -132,10 +127,19 @@ public class MenuItemServiceImpl implements MenuItemService{
 //    }
 
     @Override
+    public List<MenuItemResponse> getAvailableMenuItems(Long restaurantId) {
+
+        Restaurants restaurant = restaurantRepository.findByIdAndApprovedTrue(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Approved restaurant not found"));
+
+        return menuItemRepository.findByRestaurantIdAndAvailableTrue(restaurant.getId()).stream()
+                .map(item -> modelMapper.map(item, MenuItemResponse.class)).toList();
+    }
+
+    @Override
     public void deleteMenuItem(Long menuItemId) {
         MenuItem existingItem = menuItemRepository.findById(menuItemId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Menu item not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Menu item not found"));
 
         menuItemRepository.delete(existingItem);
     }

@@ -29,5 +29,9 @@ public interface RestaurantService {
 
     SubscriptionResponse getOwnerSubscription(Long id);
 
+    List<RestaurantResponse> getCustomerRestaurants();
+
+    RestaurantResponse getCustomerRestaurantById(Long restaurantId);
+
 //    RestaurantResponse getOwnerRestaurantById(Long restaurantId, Long id);
 }

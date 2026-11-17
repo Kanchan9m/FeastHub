@@ -1,9 +1,6 @@
 package com.example.project.repositories;
 
-import com.example.project.model.Restaurants;
-import com.example.project.model.Role;
-import com.example.project.model.User;
-import com.example.project.model.UserRestaurant;
+import com.example.project.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,4 +21,6 @@ public interface UserRestaurantRepository extends JpaRepository<UserRestaurant, 
     boolean existsByUserAndRestaurant(User user, Restaurants restaurant);
 
     boolean existsByRestaurant(Restaurants restaurant);
+
+    boolean existsByUser_IdAndRestaurant_IdAndRole_RoleName(Long ownerId, Long id, RoleType roleName);
 }

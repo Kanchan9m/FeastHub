@@ -75,4 +75,33 @@ public class EmailServiceImpl implements EmailService{
         );
         mailSender.send(message);
     }
+
+
+    @Override
+    public void sendEmployeeInvitationEmail(
+            String email,
+            String employeeName,
+            String restaurantName,
+            String invitationLink) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom(fromEmail);
+        message.setTo(email);
+        message.setSubject("Employee Invitation - " + restaurantName);
+
+        message.setText(
+                "Hello " + employeeName + ",\n\n" +
+                        "You have been invited to join " + restaurantName +
+                        " as an employee.\n\n" +
+                        "Please click the link below to accept your invitation " +
+                        "and create your account:\n\n" +
+                        invitationLink + "\n\n" +
+                        "This invitation expires in 24 hours.\n\n" +
+                        "Regards,\n" +
+                        restaurantName + " Team"
+        );
+
+        mailSender.send(message);
+    }
 }

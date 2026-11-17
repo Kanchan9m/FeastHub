@@ -3,6 +3,7 @@ package com.example.project.model;
 public enum RoleType {
     ROLE_ADMIN,
     ROLE_OWNER,
+    ROLE_EMPLOYEE,
     ROLE_MANAGER,
     ROLE_CHEF,
     ROLE_WAITER,

@@ -184,14 +184,21 @@ public class RestaurantServiceImpl implements RestaurantService{
 //        return modelMapper.map(restaurant, RestaurantResponse.class);
 //    }
 
-//    @Override
-//    public List<RestaurantResponse> getAllRestaurants() {
-//
-//        return restaurantRepository.findAll()
-//                .stream()
-//                .map(p -> modelMapper.map(p, RestaurantResponse.class))
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<RestaurantResponse> getCustomerRestaurants() {
+
+        return restaurantRepository.findByApprovedTrue().stream().map(restaurant ->
+                        modelMapper.map(restaurant, RestaurantResponse.class)).toList();
+    }
+
+    @Override
+    public RestaurantResponse getCustomerRestaurantById(Long restaurantId) {
+
+        Restaurants restaurant = restaurantRepository.findByIdAndApprovedTrue(restaurantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Approved restaurant not found"));
+
+        return modelMapper.map(restaurant, RestaurantResponse.class);
+    }
 
     @Override
     public RestaurantResponse updateRestaurant(

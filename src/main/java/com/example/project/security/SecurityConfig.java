@@ -41,6 +41,8 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/rms/employee/accept-invitation").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/rms/customer/restaurants/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS,"/**")
                         .permitAll().requestMatchers("/rms/register",
                                 "/rms/signin", "/rms/refresh",

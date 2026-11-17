@@ -23,5 +23,14 @@ public interface RestaurantRepository extends JpaRepository<Restaurants, Long> {
 
     long countByStaff_User_Id(Long ownerId);
 
+    boolean existsBySeededTrue();
+    boolean existsByRestaurantNameAndSeededTrue(String restaurantName);
+    Optional<Restaurants> findByRestaurantNameAndSeededTrue(String restaurantName);
+
+    List<Restaurants> findByApprovedTrue();
+
+    Optional<Restaurants> findByIdAndApprovedTrue(Long id);
+
+
 //    Optional<Restaurants> findByIdAndOwnerId(Long restaurantId, Long ownerId);
 }
